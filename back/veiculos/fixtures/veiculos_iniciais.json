@@ -1,0 +1,79 @@
+[
+    {
+        "model": "veiculos.veiculo",
+        "pk": 1,
+        "fields": {
+            "placa": "ABC1D23",
+            "modelo": "Honda Civic",
+            "cor": "Preto",
+            "tipo": "carro",
+            "vaga": "A01",
+            "status": "estacionado",
+            "observacao": "Cliente mensalista",
+            "entrada_em": "2026-07-01T08:00:00Z"
+        }
+    },
+    {
+        "model": "veiculos.veiculo",
+        "pk": 2,
+        "fields": {
+            "placa": "XYZ9K88",
+            "modelo": "Toyota Corolla",
+            "cor": "Branco",
+            "tipo": "carro",
+            "vaga": "A02",
+            "status": "estacionado",
+            "observacao": "Lavagem solicitada",
+            "entrada_em": "2026-07-01T08:00:00Z"
+        }
+    },
+    {
+        "model": "veiculos.veiculo",
+        "pk": 3,
+        "fields": {
+            "placa": "BRA2M11",
+            "modelo": "Yamaha Fazer",
+            "cor": "Azul",
+            "tipo": "moto",
+            "vaga": "M01",
+            "status": "finalizado",
+            "observacao": "Saída já registrada",
+            "entrada_em": "2026-07-01T09:15:00Z",
+            "saida_em": "2026-07-01T11:20:00Z",
+            "valor_pago": "18.00"
+        }
+    },
+    {
+        "model": "veiculos.veiculo",
+        "pk": 4,
+        "fields": {
+            "placa": "QWE4R56",
+            "modelo": "Fiat Argo",
+            "cor": "Vermelho",
+            "tipo": "carro",
+            "vaga": "B03",
+            "status": "estacionado",
+            "observacao": "",
+            "entrada_em": "2026-07-01T09:15:00Z",
+            "saida_em": "2026-07-01T11:20:00Z",
+            "valor_pago": "25.00"
+        }
+    },
+    {
+        "model": "veiculos.veiculo",
+        "pk": 5,
+        "fields": {
+            "placa": "TTT7H90",
+            "modelo": "Chevrolet Onix",
+            "cor": "Cinza",
+            "tipo": "carro",
+            "vaga": "B05",
+            "status": "finalizado",
+            "observacao": "Pagamento confirmado",
+            "entrada_em": "2026-07-01T09:15:00Z",
+            "saida_em": "2026-07-01T11:20:00Z",
+            "valor_pago": "25.00"
+        }
+    },
+    
+]
