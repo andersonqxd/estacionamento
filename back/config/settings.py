@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django_filters',
     'corsheaders',
     'veiculos',
+    'vagas',
 ]
 
 MIDDLEWARE = [
