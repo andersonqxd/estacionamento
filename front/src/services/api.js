@@ -1,82 +1,65 @@
-const  API_BASE_URL = 'http://127.0.0.1:8000/api';
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api";
 
-export async function getVeiculos() {
-    const response = await fetch(`${API_BASE_URL}/veiculos/`, {
-       cache: 'no-store',
-    });
-
-    if(!response.ok) {
-        throw new Error('Erro ao buscar veiculos');
-    }
-    return response.json()
-}
-
-export async function criarVeiculo(dados) {
-    const response = await fetch(`${API_BASE_URL}/veiculos/`, {
-    method: 'POST',
+async function request(path, options = {}) {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
     },
-    body: JSON.stringify(dados),
+    ...options,
   });
 
+  const contentType = response.headers.get("content-type");
+  const isJson = contentType && contentType.includes("application/json");
+
+  const data = isJson ? await response.json() : null;
+
   if (!response.ok) {
-    throw new Error('Erro ao cadastrar veículo.');
+    throw {
+      status: response.status,
+      data,
+    };
   }
 
-  return response.json();
+  return data;
 }
 
-export async function excluirVeiculo(id) {
-  const response = await fetch(`${API_BASE_URL}/veiculos/${id}/`, {
-    method: 'DELETE',
+export function getVeiculos() {
+  return request("/veiculos/");
+}
+
+export function criarVeiculo(payload) {
+  return request("/veiculos/", {
+    method: "POST",
+    body: JSON.stringify(payload),
   });
-
-  if (!response.ok) {
-    throw new Error('Erro ao excluir veículo.');
-  }
-
-  return true;
 }
 
-export async function registrarSaida(id, valor_pago = null) {
-  const response = await fetch(`${API_BASE_URL}/veiculos/${id}/registrar_saida/`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+export function atualizarVeiculo(id, payload) {
+  return request(`/veiculos/${id}/`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+}
+
+export function excluirVeiculo(id) {
+  return request(`/veiculos/${id}/`, {
+    method: "DELETE",
+  });
+}
+
+export function registrarSaida(id, valor_pago) {
+  return request(`/veiculos/${id}/registrar_saida/`, {
+    method: "POST",
     body: JSON.stringify({ valor_pago }),
   });
-
-  if (!response.ok) {
-    throw new Error('Erro ao registrar saída.');
-  }
-
-  return response.json();
-}
-export async function atualizarVeiculo(id, dados) {
-  const   response = await fetch (`${API_BASE_URL}/veiculos/${id}/`, {
-    method: 'PATCH',
-    headers: {
-      'content-Type': 'application/json',
-    },
-    body: JSON.stringify(dados),
-  });
-
-  if(!response.ok) {
-    throw new Error('Erro ao atualizar o veiculo,')
-  }
-  return response.json();
 }
 
-export async function getDashboard() {
-  const response = await fetch(`${API_BASE_URL}/dashboard/`, {
-    cache: 'no-store',
-  });
+export function getVagasAtivas() {
+  return request("/vagas/?ativa=true");
+}
 
-  if (!response.ok) {
-    throw new Error('Erro ao buscar dashboard.');
-  }
-
-  return response.json();
+export function getDashboard() {
+  return request("/dashboard/");
 }

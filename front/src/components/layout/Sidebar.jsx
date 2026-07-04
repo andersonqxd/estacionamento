@@ -6,22 +6,30 @@ function Sidebar({ abaAtiva, onChangeAba }) {
         <p>Controle do estacionamento</p>
       </div>
 
-      <nav className="menu">
-        <button
-          type="button"
-          className={`menu-item ${abaAtiva === 'veiculos' ? 'active' : ''}`}
-          onClick={() => onChangeAba('veiculos')}
-        >
-          Veículos
-        </button>
+      <nav className="menu" aria-label="Navegação principal">
+        <ul className="menu-list">
+          <li>
+            <button
+              type="button"
+              className={`menu-item ${abaAtiva === "veiculos" ? "active" : ""}`}
+              aria-current={abaAtiva === "veiculos" ? "page" : undefined}
+              onClick={() => onChangeAba("veiculos")}
+            >
+              Veículos
+            </button>
+          </li>
 
-        <button
-          type="button"
-          className={`menu-item ${abaAtiva === 'dashboard' ? 'active' : ''}`}
-          onClick={() => onChangeAba('dashboard')}
-        >
-          Dashboard
-        </button>
+          <li>
+            <button
+              type="button"
+              className={`menu-item ${abaAtiva === "dashboard" ? "active" : ""}`}
+              aria-current={abaAtiva === "dashboard" ? "page" : undefined}
+              onClick={() => onChangeAba("dashboard")}
+            >
+              Dashboard
+            </button>
+          </li>
+        </ul>
       </nav>
     </aside>
   );

@@ -1,37 +1,31 @@
-function DashboardCards({ dados }) {
-    return (
-        <section className="grid">
-            <div className="card stats">
-                <h3>Total de veículos</h3>
-                <strong>{dados.total_veiculos}</strong>
-            </div>
+function DashboardCards({ dados = {} }) {
+  const formatarMoeda = (valor) =>
+    new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    }).format(Number(valor || 0));
 
-            <div className="card stats">
-                <h3>Veículos ativos</h3>
-                <strong>{dados.veiculos_ativos}</strong>
-            </div>
+  const cards = [
+    { titulo: "Total de veículos", valor: dados.total_veiculos ?? 0 },
+    { titulo: "Veículos ativos", valor: dados.veiculos_ativos ?? 0 },
+    { titulo: "Finalizados", valor: dados.veiculos_finalizados ?? 0 },
+    { titulo: "Lucro de hoje", valor: formatarMoeda(dados.lucro_hoje) },
+    { titulo: "Lucro total", valor: formatarMoeda(dados.lucro_total) },
+    { titulo: "Ticket médio", valor: formatarMoeda(dados.ticket_medio) },
+  ];
 
-            <div className="card stats">
-                <h3>Finalizados</h3>
-                <strong>{dados.veiculos_finalizados}</strong>
-            </div>
-
-            <div className="card stats">
-                <h3>Lucro de hoje</h3>
-                <strong>R$ {Number(dados.lucro_hoje || 0).toFixed(2)}</strong>
-            </div>
-
-            <div className="card stats">
-                <h3>Lucro total</h3>
-                <strong>R$ {Number(dados.lucro_total || 0).toFixed(2)}</strong>
-            </div>
-
-            <div className="card stats">
-                <h3>Ticket médio</h3>
-                <strong>R$ {Number(dados.ticket_medio || 0).toFixed(2)}</strong>
-            </div>
-        </section>
-    )
+  return (
+    <section aria-label="Indicadores do dashboard">
+      <div className="grid">
+        {cards.map((card) => (
+          <article key={card.titulo} className="card stats">
+            <h3>{card.titulo}</h3>
+            <strong>{card.valor}</strong>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
 }
 
 export default DashboardCards;

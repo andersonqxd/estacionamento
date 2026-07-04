@@ -1,77 +1,129 @@
 function VehicleForm({
   form,
+  vagas = [],
   editandoId,
+  error,
+  submitting,
   onChange,
   onSubmit,
   onCancelEdit,
 }) {
   return (
-    <div className="card form-card">
-      <h2>{editandoId ? 'Editar veículo' : 'Novo veículo'}</h2>
+    <form onSubmit={onSubmit} className="form" aria-label="Formulário de veículo">
+      <p className="form-help">
+        Campos marcados com <span aria-hidden="true">*</span> são obrigatórios.
+      </p>
 
-      <form onSubmit={onSubmit} className="form">
-        <input
-          name="placa"
-          placeholder="Placa"
-          value={form.placa}
-          onChange={onChange}
-          required
-        />
+      <div className="form-grid">
+        <div className="form-field">
+          <label htmlFor="placa">
+            Placa <span aria-hidden="true">*</span>
+          </label>
+          <input
+            id="placa"
+            name="placa"
+            placeholder="Ex.: ABC1D23"
+            value={form.placa}
+            onChange={onChange}
+            required
+          />
+        </div>
 
-        <input
-          name="modelo"
-          placeholder="Modelo"
-          value={form.modelo}
-          onChange={onChange}
-          required
-        />
+        <div className="form-field">
+          <label htmlFor="modelo">
+            Modelo <span aria-hidden="true">*</span>
+          </label>
+          <input
+            id="modelo"
+            name="modelo"
+            placeholder="Ex.: Gol"
+            value={form.modelo}
+            onChange={onChange}
+            required
+          />
+        </div>
 
-        <input
-          name="cor"
-          placeholder="Cor"
-          value={form.cor}
-          onChange={onChange}
-          required
-        />
+        <div className="form-field">
+          <label htmlFor="cor">
+            Cor <span aria-hidden="true">*</span>
+          </label>
+          <input
+            id="cor"
+            name="cor"
+            placeholder="Ex.: Prata"
+            value={form.cor}
+            onChange={onChange}
+            required
+          />
+        </div>
 
-        <select name="tipo" value={form.tipo} onChange={onChange}>
-          <option value="carro">Carro</option>
-          <option value="moto">Moto</option>
-          <option value="suv">SUV</option>
-          <option value="caminhonete">Caminhonete</option>
-        </select>
+        <div className="form-field">
+          <label htmlFor="vaga">
+            Vaga <span aria-hidden="true">*</span>
+          </label>
+          <select
+            id="vaga"
+            name="vaga"
+            value={form.vaga}
+            onChange={onChange}
+            required
+          >
+            <option value="">Selecione uma vaga</option>
+            {vagas.map((vaga) => (
+              <option key={vaga.id} value={vaga.id}>
+                {vaga.codigo}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <input
-          name="vaga"
-          placeholder="Vaga"
-          value={form.vaga}
-          onChange={onChange}
-        />
+        <div className="form-field">
+          <label htmlFor="status">Status</label>
+          <select
+            id="status"
+            name="status"
+            value={form.status}
+            onChange={onChange}
+          >
+            <option value="estacionado">Estacionado</option>
+            <option value="reservado">Reservado</option>
+            <option value="finalizado">Finalizado</option>
+          </select>
+        </div>
 
-        <select name="status" value={form.status} onChange={onChange}>
-          <option value="estacionado">Estacionado</option>
-          <option value="reservado">Reservado</option>
-          <option value="finalizado">Finalizado</option>
-        </select>
+        <div className="form-field form-field-full">
+          <label htmlFor="observacao">Observação</label>
+          <textarea
+            id="observacao"
+            name="observacao"
+            placeholder="Informações adicionais"
+            value={form.observacao}
+            onChange={onChange}
+            rows="4"
+          />
+        </div>
+      </div>
 
-        <textarea
-          name="observacao"
-          placeholder="Observação"
-          value={form.observacao}
-          onChange={onChange}
-        />
+      {error && (
+        <div className="form-error" role="alert">
+          {error}
+        </div>
+      )}
 
-        <button type="submit" className="primary">
-          {editandoId ? 'Salvar alterações' : 'Cadastrar veículo'}
+      <div className="form-actions">
+        <button type="submit" className="primary" disabled={submitting}>
+          {submitting
+            ? "Salvando..."
+            : editandoId
+            ? "Salvar alterações"
+            : "Cadastrar veículo"}
         </button>
 
-        {editandoId && (
-          <button type="button" className="ghost" onClick={onCancelEdit}>
-            Cancelar edição
-          </button>
-        )}
-      </form>
-    </div>
+        <button type="button" className="ghost" onClick={onCancelEdit}>
+          Cancelar
+        </button>
+      </div>
+    </form>
   );
 }
 

@@ -1,12 +1,10 @@
 from django.db import transaction
 from rest_framework import serializers
-
+from django.utils import timezone
 from .models import Veiculo
 from vagas.models import Vaga
 
-
 class VeiculoSerializer(serializers.ModelSerializer):
-    vaga = serializers.PrimaryKeyRelatedField(queryset=Vaga.objects.all())
     vaga_codigo = serializers.SerializerMethodField()
 
     class Meta:
@@ -16,13 +14,13 @@ class VeiculoSerializer(serializers.ModelSerializer):
             "placa",
             "modelo",
             "cor",
-            "status",
             "vaga",
             "vaga_codigo",
+            "status",
+            "observacao",
             "entrada_em",
             "saida_em",
             "valor_pago",
-            "observacao",
         ]
 
     def get_vaga_codigo(self, obj):
@@ -33,6 +31,11 @@ class VeiculoSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         vaga = attrs.get("vaga", getattr(self.instance, "vaga", None))
         status = attrs.get("status", getattr(self.instance, "status", "estacionado"))
+
+        if vaga and not vaga.ativa:
+            raise serializers.ValidationError({
+                "vaga": "Esta vaga está inativa."
+            })
 
         if vaga and status == "estacionado":
             qs = Veiculo.objects.filter(vaga=vaga, status="estacionado")
@@ -46,16 +49,26 @@ class VeiculoSerializer(serializers.ModelSerializer):
 
         return attrs
 
+    def get_vaga_detalhe(self, obj):
+        if not obj.vaga:
+            return None
+        return {
+            "id": obj.vaga.id,
+            "setor": obj.vaga.setor,
+            "numero": obj.vaga.numero,
+            "codigo": f"{obj.vaga.setor}{obj.vaga.numero}",
+        }
+
     @transaction.atomic
     def create(self, validated_data):
-        vaga = validated_data.get("vaga")
-        status = validated_data.get("status")
+        if not validated_data.get("entrada_em"):
+            validated_data["entrada_em"] = timezone.now()
 
         veiculo = Veiculo.objects.create(**validated_data)
 
-        if vaga and status == "estacionado":
-            vaga.ocupada = True
-            vaga.save(update_fields=["ocupada"])
+        if veiculo.vaga and veiculo.status == "estacionado":
+            veiculo.vaga.ocupada = True
+            veiculo.vaga.save(update_fields=["ocupada"])
 
         return veiculo
 
@@ -71,7 +84,7 @@ class VeiculoSerializer(serializers.ModelSerializer):
             setattr(instance, attr, value)
         instance.save()
 
-        if status_antigo == "estacionado" and (
+        if vaga_antiga and status_antigo == "estacionado" and (
             novo_status == "finalizado" or vaga_antiga != nova_vaga
         ):
             vaga_antiga.ocupada = False
